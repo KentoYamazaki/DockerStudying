@@ -1,0 +1,44 @@
+version: '3.3'
+services:
+  FastApp:
+    image: tiangolo/uvicorn-gunicorn-fastapi:python3.7
+    container_name: FastApp
+    networks:
+      docker_nw:
+        ipv4_address: 192.168.10.2     
+    volumes:
+      - ./apps:/apps
+    ports:
+      - 8000:8000
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  wireshark:
+    image: lscr.io/linuxserver/wireshark:latest
+    container_name: wireshark
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /path/to/config:/config
+    ports:
+      - 3000:3000 #optional
+    restart: unless-stopped
+
+  ubuntu:
+    build: .
+    networks:
+      docker_nw:
+        ipv4_address: 192.168.10.4
+    container_name: ubuntu
+    tty: true
+
+networks:
+  docker_nw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
