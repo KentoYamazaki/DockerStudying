@@ -1,8 +1,8 @@
 version: '3.3'
 services:
-  FastApp:
+  FastAPI:
     image: tiangolo/uvicorn-gunicorn-fastapi:python3.7
-    container_name: FastApp
+    container_name: FastAPI
     networks:
       docker_nw:
         ipv4_address: 192.168.10.2
